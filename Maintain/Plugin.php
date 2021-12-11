@@ -17,8 +17,13 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
         Typecho_Plugin::factory('admin/menu.php')->navBar = array('Maintain_Plugin', 'nav');
     }
     public static function render($header,$archive){
+
         if (Helper::options()->plugin("Maintain")->MaintainButton === "on"){
             $data = Helper::options()->plugin('Maintain');
+            if ($data->superadmin=="on"){
+                if (Typecho_Widget::widget('Widget_User')->pass('administrator', true))
+                return;
+            }
             include("view/maintain.php");
             die();
         }
@@ -30,6 +35,7 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
                 . "闭站维护中"
                 . '</span>';
         }else{
+
             echo '<span class="message success">'
                 . "正常开站中"
                 . '</span>';
@@ -57,6 +63,11 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
         ), 'off', '樱花效果', '关闭和开启樱花飘落');
         $form->addInput($sakura->multiMode());
         $form->addInput($title);
+        $superadmin = new Typecho_Widget_Helper_Form_Element_Select('superadmin', array(
+            'off'=>'关闭超级访问',
+            'on'=>'开启超级访问'
+        ),'on','超级访问','开启后在页面关闭的时候，管理可以正常访问');
+        $form->addInput($superadmin->multiMode());
     }
     public static function personalConfig(Typecho_Widget_Helper_Form $form)
     {
