@@ -8,12 +8,16 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>闭站维护中</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itoukou1/cssjs@1.0/app.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/itoukou1/cssjs@1.2/app.css">
     <script src="https://cdn.jsdelivr.net/gh/itoukou1/cssjs@1.0/sakura.js"></script>
     <?php if(Helper::options()->plugin("Maintain")->MaintainBackground != "") : ?>
     <style>
         .layerBackground{
             background: url("<?php echo(Helper::options()->plugin("Maintain")->MaintainBackground); ?>");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
         }
     </style>
     <?php endif; ?>
