@@ -10,14 +10,18 @@ if(!defined('__TYPECHO_ROOT_DIR__')){
  * @version 1.6.0
  * @link http://dns.doraeclub.com
  */
+define("Plugin_VERSION","v1.6");
 class Maintain_Plugin implements Typecho_Plugin_Interface
 {
     public static function activate(){
         Typecho_Plugin::factory('Widget_Archive')->header = array('Maintain_Plugin', 'render');
         Typecho_Plugin::factory('admin/menu.php')->navBar = array('Maintain_Plugin', 'nav');
+
+    }
+    public static function test(){
+        die();
     }
     public static function render($header,$archive){
-
         if (Helper::options()->plugin("Maintain")->MaintainButton === "on"){
             $data = Helper::options()->plugin('Maintain');
             if ($data->superadmin=="on"){
@@ -30,6 +34,7 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
 
     }
     public static function nav(){
+        //die(Helper::options()->plugin('Maintain')->checknew);
         if (Helper::options()->plugin('Maintain')->MaintainButton == 'on'){
             echo '<span class="message error">'
                 . "闭站维护中"
@@ -40,7 +45,16 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
                 . "正常开站中"
                 . '</span>';
         }
+        if (Helper::options()->plugin('Maintain')->checknew=="on"){
+            $version = file_get_contents("https://cdn.jsdelivr.net/gh/itoukou1/checknew@master/test.txt");
 
+            if (Plugin_VERSION != $version){
+                echo '<span class="message warning"><a style="color: red;" href="https://github.com/itoukou1/Typecho-Maintain">'
+                    . "闭站维护插件需要升级(点我去升级)"
+                    . '</a></span>';
+
+            }
+        }
     }
     public static function config(Typecho_Widget_Helper_Form $form)
     {
@@ -67,6 +81,11 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
             'off'=>'关闭超级访问',
             'on'=>'开启超级访问'
         ),'on','超级访问','开启后在页面关闭的时候，管理可以正常访问');
+        $form->addInput($superadmin->multiMode());
+        $superadmin = new Typecho_Widget_Helper_Form_Element_Select('checknew', array(
+            'on'=>'开启自动检测更新',
+            'off'=>'关闭自动检测更新'
+        ),'on','检测更新','是否检测插件更新');
         $form->addInput($superadmin->multiMode());
     }
     public static function personalConfig(Typecho_Widget_Helper_Form $form)
