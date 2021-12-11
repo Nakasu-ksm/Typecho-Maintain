@@ -7,7 +7,7 @@ if(!defined('__TYPECHO_ROOT_DIR__')){
  *
  * @package 维护模式
  * @author 伊藤雄二
- * @version 1.5.0
+ * @version 1.6.0
  * @link http://dns.doraeclub.com
  */
 class Maintain_Plugin implements Typecho_Plugin_Interface
