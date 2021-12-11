@@ -7,18 +7,32 @@ if(!defined('__TYPECHO_ROOT_DIR__')){
  *
  * @package 维护模式
  * @author 伊藤雄二
- * @version 1.0.0
+ * @version 1.5.0
  * @link http://dns.doraeclub.com
  */
 class Maintain_Plugin implements Typecho_Plugin_Interface
 {
     public static function activate(){
         Typecho_Plugin::factory('Widget_Archive')->header = array('Maintain_Plugin', 'render');
+        Typecho_Plugin::factory('admin/menu.php')->navBar = array('Maintain_Plugin', 'nav');
     }
     public static function render($header,$archive){
         if (Helper::options()->plugin("Maintain")->MaintainButton === "on"){
+            $data = Helper::options()->plugin('Maintain');
             include("view/maintain.php");
             die();
+        }
+
+    }
+    public static function nav(){
+        if (Helper::options()->plugin('Maintain')->MaintainButton == 'on'){
+            echo '<span class="message error">'
+                . "闭站维护中"
+                . '</span>';
+        }else{
+            echo '<span class="message success">'
+                . "正常开站中"
+                . '</span>';
         }
 
     }
@@ -36,8 +50,13 @@ class Maintain_Plugin implements Typecho_Plugin_Interface
         $url = new Typecho_Widget_Helper_Form_Element_Text('URL',Null, Null, '按钮链接', "填写URL");
         $form->addInput($url);
         $title = new Typecho_Widget_Helper_Form_Element_Text('title',NULL, "点我访问", "按钮显示文本","默认：点我访问");
+        $sakura = new Typecho_Widget_Helper_Form_Element_Select('sakura',
+        array(
+            'off'=>'关闭樱花飘落效果',
+            'on'=>'开启樱花飘落效果'
+        ), 'off', '樱花效果', '关闭和开启樱花飘落');
+        $form->addInput($sakura->multiMode());
         $form->addInput($title);
-
     }
     public static function personalConfig(Typecho_Widget_Helper_Form $form)
     {
