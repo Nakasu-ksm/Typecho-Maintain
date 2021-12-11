@@ -1,1 +1,1 @@
-Typecho的维护插件
+Typecho的闭站维护插件
